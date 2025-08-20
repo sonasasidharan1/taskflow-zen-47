@@ -66,22 +66,17 @@ const Contact = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 animate-fade-in-up">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
-            Get In Touch
+            Contact
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Have a project in mind or just want to chat about web development? 
-            I'd love to hear from you. Let's create something amazing together.
+            Let's discuss your next project or connect for opportunities.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Information */}
           <div className="animate-fade-in-up">
-            <h3 className="text-2xl font-serif font-semibold text-primary mb-8">
-              Let's Connect
-            </h3>
-            
-            <div className="space-y-6 mb-8">
+            <div className="space-y-6">
               {contactInfo.map((info, index) => (
                 <div key={index} className="flex items-center space-x-4">
                   <div className="flex-shrink-0 w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center">
@@ -104,21 +99,6 @@ const Contact = () => {
                   </div>
                 </div>
               ))}
-            </div>
-
-            <div className="bg-gradient-primary rounded-lg p-6 text-center shadow-medium">
-              <h4 className="text-xl font-semibold text-accent-foreground mb-2">
-                Ready to Start Your Project?
-              </h4>
-              <p className="text-accent-foreground/80 mb-4">
-                Let's discuss how I can help bring your ideas to life.
-              </p>
-              <Button
-                variant="secondary"
-                className="bg-background/20 hover:bg-background/30 text-accent-foreground border-accent-foreground/20"
-              >
-                Schedule a Call
-              </Button>
             </div>
           </div>
 
