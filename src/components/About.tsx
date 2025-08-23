@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Code, Palette, Zap } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Code, Palette, Zap, Download } from "lucide-react";
 
 const About = () => {
   const skills = [
@@ -32,6 +33,32 @@ const About = () => {
             that are not only functional but also beautiful and intuitive. I believe in the power of 
             clean code, thoughtful design, and continuous learning.
           </p>
+        </div>
+
+        {/* Download CV Section */}
+        <div className="text-center mb-16 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <div className="bg-gradient-primary rounded-lg p-8 shadow-medium hover:shadow-lg transition-all duration-300">
+            <h3 className="text-2xl font-serif font-semibold text-accent-foreground mb-4">
+              Interested in Working Together?
+            </h3>
+            <p className="text-accent-foreground/80 mb-6 max-w-2xl mx-auto">
+              Download my resume to learn more about my experience, skills, and achievements. 
+              Let's discuss how I can contribute to your next project.
+            </p>
+            <Button
+              className="bg-background/20 hover:bg-background/30 text-accent-foreground border border-accent-foreground/20 hover:border-accent-foreground/40 font-medium px-8 py-3 rounded-full shadow-medium hover-scale transform transition-all duration-300"
+              onClick={() => {
+                // In a real application, this would download an actual CV file
+                const link = document.createElement('a');
+                link.href = '/placeholder.svg'; // Replace with actual CV file path
+                link.download = 'Sona_K_Resume.pdf';
+                link.click();
+              }}
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Download Resume
+            </Button>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">

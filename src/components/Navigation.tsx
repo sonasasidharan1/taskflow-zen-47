@@ -31,7 +31,7 @@ const Navigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-8">
-            {["Home", "About", "Portfolio", "Contact"].map((item, index) => (
+            {["Home", "About", "Experience", "Education", "Portfolio", "Contact"].map((item, index) => (
               <button
                 key={item}
                 onClick={() => scrollToSection(item.toLowerCase())}
@@ -59,7 +59,7 @@ const Navigation = () => {
         {isOpen && (
           <div className="md:hidden bg-card border-t border-border animate-fade-in">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              {["Home", "About", "Portfolio", "Contact"].map((item) => (
+              {["Home", "About", "Experience", "Education", "Portfolio", "Contact"].map((item) => (
                 <button
                   key={item}
                   onClick={() => scrollToSection(item.toLowerCase())}
