@@ -104,12 +104,7 @@ const Contact = () => {
 
           {/* Contact Form */}
           <Card className="shadow-soft animate-scale-in">
-            <CardHeader>
-              <CardTitle className="text-2xl font-serif text-primary">
-                Send Me a Message
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+            <CardContent className="pt-6">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
