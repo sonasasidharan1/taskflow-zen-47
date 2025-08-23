@@ -69,19 +69,24 @@ const Portfolio = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => (
-            <Card key={index} className="group shadow-soft hover:shadow-medium transition-all duration-300 animate-fade-in-up overflow-hidden">
+            <Card 
+              key={index} 
+              className="group shadow-soft hover:shadow-lg transition-all duration-500 animate-fade-in overflow-hidden hover-scale transform hover:-translate-y-2 cursor-pointer"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
               <div className="relative overflow-hidden">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-primary/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4">
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center space-x-4">
                   <Button
                     size="sm"
                     variant="secondary"
                     asChild
-                    className="shadow-medium"
+                    className="shadow-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover-scale"
+                    style={{ transitionDelay: '0.1s' }}
                   >
                     <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
                       <ExternalLink className="h-4 w-4 mr-2" />
@@ -92,7 +97,8 @@ const Portfolio = () => {
                     size="sm"
                     variant="outline"
                     asChild
-                    className="bg-background/90 hover:bg-background"
+                    className="bg-background/90 hover:bg-background transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover-scale"
+                    style={{ transitionDelay: '0.2s' }}
                   >
                     <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
                       <Github className="h-4 w-4 mr-2" />
@@ -102,21 +108,21 @@ const Portfolio = () => {
                 </div>
               </div>
               
-              <CardHeader>
-                <CardTitle className="text-xl font-semibold text-primary">
+              <CardHeader className="group-hover:bg-accent/5 transition-colors duration-300">
+                <CardTitle className="text-xl font-semibold text-primary group-hover:text-accent transition-colors duration-300">
                   {project.title}
                 </CardTitle>
               </CardHeader>
               
-              <CardContent className="pt-0">
-                <p className="text-muted-foreground mb-4 leading-relaxed">
+              <CardContent className="pt-0 group-hover:bg-accent/5 transition-colors duration-300">
+                <p className="text-muted-foreground mb-4 leading-relaxed group-hover:text-foreground transition-colors duration-300">
                   {project.description}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {project.tags.map((tag, tagIndex) => (
                     <span
                       key={tagIndex}
-                      className="px-3 py-1 text-xs font-medium bg-accent/10 text-accent rounded-full"
+                      className="px-3 py-1 text-xs font-medium bg-accent/10 text-accent rounded-full transition-all duration-300 hover:bg-accent/20 hover:scale-105 cursor-pointer"
                     >
                       {tag}
                     </span>

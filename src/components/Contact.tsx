@@ -75,26 +75,30 @@ const Contact = () => {
 
         <div className="flex justify-center">
           {/* Contact Information */}
-          <div className="animate-fade-in-up max-w-md">
+          <div className="animate-fade-in max-w-md">
             <div className="space-y-6">
               {contactInfo.map((info, index) => (
-                <div key={index} className="flex items-center space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center">
-                    <div className="text-accent">
+                <div 
+                  key={index} 
+                  className="flex items-center space-x-4 group hover-scale transform transition-all duration-300 hover:bg-accent/5 rounded-lg p-3 cursor-pointer animate-fade-in"
+                  style={{ animationDelay: `${index * 0.2}s` }}
+                >
+                  <div className="flex-shrink-0 w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center group-hover:bg-accent/20 transition-colors duration-300 group-hover:scale-110 transform">
+                    <div className="text-accent group-hover:scale-110 transition-transform duration-300">
                       {info.icon}
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground">{info.label}</div>
+                    <div className="text-sm text-muted-foreground group-hover:text-accent transition-colors duration-300">{info.label}</div>
                     {info.href !== "#" ? (
                       <a 
                         href={info.href}
-                        className="text-foreground hover:text-accent transition-colors duration-200"
+                        className="text-foreground hover:text-accent transition-colors duration-300 group-hover:text-accent"
                       >
                         {info.value}
                       </a>
                     ) : (
-                      <div className="text-foreground">{info.value}</div>
+                      <div className="text-foreground group-hover:text-accent transition-colors duration-300">{info.value}</div>
                     )}
                   </div>
                 </div>

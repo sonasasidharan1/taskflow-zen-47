@@ -35,7 +35,7 @@ const About = () => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
-          <div className="animate-fade-in-up">
+          <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
             <h3 className="text-2xl font-serif font-semibold text-primary mb-6">
               My Journey
             </h3>
@@ -51,29 +51,41 @@ const About = () => {
             </p>
           </div>
           
-          <div className="animate-scale-in">
-            <div className="bg-gradient-primary rounded-lg p-8 text-center shadow-medium">
-              <div className="text-4xl font-bold text-accent-foreground mb-2">50+</div>
-              <div className="text-accent-foreground/80 mb-4">Projects Completed</div>
-              <div className="text-4xl font-bold text-accent-foreground mb-2">5+</div>
-              <div className="text-accent-foreground/80 mb-4">Years Experience</div>
-              <div className="text-4xl font-bold text-accent-foreground mb-2">∞</div>
-              <div className="text-accent-foreground/80">Cups of Coffee</div>
+          <div className="animate-scale-in" style={{ animationDelay: '0.4s' }}>
+            <div className="bg-gradient-primary rounded-lg p-8 text-center shadow-medium hover:shadow-lg transform transition-all duration-300 hover-scale">
+              <div className="space-y-6">
+                <div className="transform transition-transform duration-300 hover:scale-110">
+                  <div className="text-4xl font-bold text-accent-foreground mb-2">50+</div>
+                  <div className="text-accent-foreground/80">Projects Completed</div>
+                </div>
+                <div className="transform transition-transform duration-300 hover:scale-110">
+                  <div className="text-4xl font-bold text-accent-foreground mb-2">5+</div>
+                  <div className="text-accent-foreground/80">Years Experience</div>
+                </div>
+                <div className="transform transition-transform duration-300 hover:scale-110">
+                  <div className="text-4xl font-bold text-accent-foreground mb-2">∞</div>
+                  <div className="text-accent-foreground/80">Cups of Coffee</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
           {skills.map((skill, index) => (
-            <Card key={index} className="shadow-soft hover:shadow-medium transition-shadow duration-300 animate-fade-in-up">
+            <Card 
+              key={index} 
+              className="shadow-soft hover:shadow-medium transition-all duration-500 animate-fade-in hover-scale group cursor-pointer"
+              style={{ animationDelay: `${index * 0.2}s` }}
+            >
               <CardContent className="p-6 text-center">
-                <div className="flex justify-center mb-4">
+                <div className="flex justify-center mb-4 transform transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12">
                   {skill.icon}
                 </div>
-                <h4 className="text-xl font-semibold text-primary mb-3">
+                <h4 className="text-xl font-semibold text-primary mb-3 group-hover:text-accent transition-colors duration-300">
                   {skill.title}
                 </h4>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">
                   {skill.description}
                 </p>
               </CardContent>
