@@ -5,9 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { getPortfolioData, PortfolioData } from '../services/portfolioService';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import HeroForm from '../components/dashboard/HeroForm';
-// Import other forms as you create them
-// import AboutForm from '@/components/dashboard/AboutForm';
+import HeroForm from '@/components/dashboard/HeroForm';
+import AboutForm from '@/components/dashboard/AboutForm';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -20,7 +19,17 @@ const Dashboard = () => {
             try {
                 const data = await getPortfolioData();
                 // Initialize with default data if Firestore document doesn't exist
-                setPortfolioData(data ?? { hero: { name: '', title: '', subtitle: '' }, about: { description: '' } });
+                setPortfolioData(data ?? {
+                    hero: { name: '', title: '', subtitle: '' },
+                    about: {
+                        heading: '',
+                        description: '',
+                        resume: { heading: '', description: '' },
+                        journey: { heading: '', description: '' },
+                        metrics: { projects: 0, experience: 0 },
+                        skills: [{ name: '', icon: '', description: '' }]
+                    }
+                });
             } catch (err) {
                 console.error(err);
                 setError('Failed to fetch portfolio data. Please try again later.');
@@ -55,8 +64,8 @@ const Dashboard = () => {
                     <TabsTrigger value="portfolio" disabled>Portfolio</TabsTrigger>
                     <TabsTrigger value="contact" disabled>Contact</TabsTrigger>
                 </TabsList>
-                <TabsContent value="hero">{portfolioData && <HeroForm initialData={portfolioData.hero} />}</TabsContent>
-                <TabsContent value="about">{/* {portfolioData && <AboutForm initialData={portfolioData.about} />} */}</TabsContent>
+                {portfolioData && <TabsContent value="hero"><HeroForm initialData={portfolioData.hero} /></TabsContent>}
+                {portfolioData && <TabsContent value="about"><AboutForm initialData={portfolioData.about} /></TabsContent>}
             </Tabs>
         </div>
     );

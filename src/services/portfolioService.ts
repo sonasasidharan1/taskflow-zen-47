@@ -9,7 +9,21 @@ export interface HeroData {
 }
 
 export interface AboutData {
+  heading: string;
   description: string;
+  resume: {
+    heading: string;
+    description: string;
+  };
+  journey: {
+    heading: string;
+    description: string;
+  };
+  metrics: {
+    projects: number;
+    experience: number;
+  };
+  skills: Array<{ name: string; icon: string; description: string }>;
 }
 
 // ... Define other section data types (Experience, Education, etc.)
