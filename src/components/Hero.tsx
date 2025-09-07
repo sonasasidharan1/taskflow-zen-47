@@ -1,10 +1,41 @@
+import React, { useState, useEffect } from 'react';
+import { getPortfolioSectionData, HeroData } from '@/services/portfolioService';
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Github, Linkedin, Mail } from "lucide-react";
 
 const Hero = () => {
+  const [heroData, setHeroData] = useState<HeroData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchHeroData = async () => {
+      try {
+        const data = await getPortfolioSectionData<HeroData>('hero');
+        setHeroData(data);
+      } catch (err) {
+        console.error('Error fetching hero data:', err);
+        setError('Failed to load content.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHeroData();
+  }, []);
+
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
   };
+
+  if (loading) {
+    return <HeroSkeleton />;
+  }
+
+  if (error) {
+    return <section id="home" className="min-h-screen flex items-center justify-center text-center p-4 text-destructive">{error}</section>;
+  }
 
   return (
     <section id="home" className="min-h-screen flex items-center justify-center bg-gradient-secondary relative overflow-hidden">
@@ -18,14 +49,13 @@ const Hero = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         <div className="mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
           <h1 className="text-5xl md:text-7xl font-serif font-bold text-primary mb-4 hover-scale">
-            Sona K
+            {heroData?.name || 'Your Name'}
           </h1>
           <h2 className="text-xl md:text-2xl text-muted-foreground mb-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            Creative Web Developer
+            {heroData?.title || 'Your Title'}
           </h2>
           <p className="text-lg text-foreground max-w-2xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.6s' }}>
-            I craft beautiful, functional digital experiences that bring ideas to life. 
-            Specializing in modern web technologies with a passion for clean design and seamless user interactions.
+            {heroData?.subtitle || 'A catchy and descriptive subtitle about what you do.'}
           </p>
         </div>
 
@@ -82,5 +112,25 @@ const Hero = () => {
     </section>
   );
 };
+
+// Skeleton component for the loading state to match the layout
+const HeroSkeleton = () => (
+  <section id="home" className="min-h-screen flex items-center justify-center bg-gradient-secondary relative overflow-hidden">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <div className="mb-8">
+        <Skeleton className="h-16 md:h-20 w-3/4 mx-auto mb-4" />
+        <Skeleton className="h-8 w-1/2 mx-auto mb-6" />
+        <div className="space-y-2 max-w-2xl mx-auto">
+          <Skeleton className="h-5 w-full" />
+          <Skeleton className="h-5 w-5/6" />
+        </div>
+      </div>
+      <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-12">
+        <Skeleton className="h-11 w-36 rounded-full" />
+        <Skeleton className="h-11 w-36 rounded-full" />
+      </div>
+    </div>
+  </section>
+);
 
 export default Hero;

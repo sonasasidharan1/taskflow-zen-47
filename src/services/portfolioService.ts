@@ -36,6 +36,21 @@ export const getPortfolioData = async (): Promise<PortfolioData | null> => {
 };
 
 /**
+ * Fetches a specific section of the portfolio data from Firestore.
+ * @param section - The key of the section to fetch (e.g., 'hero').
+ * @returns A promise that resolves to the section's data.
+ */
+export const getPortfolioSectionData = async <T>(
+  section: keyof PortfolioData
+): Promise<T | null> => {
+  const docSnap = await getDoc(portfolioDocRef);
+  if (docSnap.exists()) {
+    return (docSnap.data()[section] as T) ?? null;
+  }
+  return null;
+};
+
+/**
  * Updates a specific section of the portfolio data in Firestore.
  * @param section - The key of the section to update (e.g., 'hero', 'about').
  * @param data - The new data for the section.
