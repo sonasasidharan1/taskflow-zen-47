@@ -26,11 +26,44 @@ export interface AboutData {
   skills: Array<{ name: string; icon: string; description: string }>;
 }
 
+export interface ContactData {
+  heading: string;
+  description: string;
+  email: string;
+  phone: string;
+  location: string;
+}
+
+export interface EducationItem {
+  degree: string;
+  institution: string;
+  year: string;
+  gpa: string;
+  achievements: string[];
+  description: string;
+}
+
+export interface CertificationItem {
+  name: string;
+  issuer: string;
+  year: string;
+  credentialId: string;
+}
+
+export interface EducationData {
+  heading: string;
+  description: string;
+  education: EducationItem[];
+  certifications: CertificationItem[];
+}
+
 // ... Define other section data types (Experience, Education, etc.)
 
 export interface PortfolioData {
   hero: HeroData;
   about: AboutData;
+  contact?: ContactData;
+  education?: EducationData;
   // ... other sections
 }
 

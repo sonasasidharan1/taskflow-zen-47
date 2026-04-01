@@ -1,57 +1,97 @@
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { GraduationCap, Award, Calendar } from "lucide-react";
+import { FirebaseError } from "firebase/app";
+import { EducationData, getPortfolioSectionData } from "@/services/portfolioService";
+
+type NormalizedEducationItem = {
+  degree: string;
+  institution: string;
+  year: string;
+  gpa: string;
+  description: string;
+  achievements: string[];
+};
+
+const normalizeEducationData = (raw: any): EducationData | null => {
+  if (!raw || typeof raw !== "object") return null;
+
+  const fromEducation = Array.isArray(raw.education) ? raw.education : [];
+  const fromDegrees = Array.isArray(raw.degrees) ? raw.degrees : [];
+
+  const education: NormalizedEducationItem[] = (fromEducation.length ? fromEducation : fromDegrees).map(
+    (item: any) => ({
+      degree: item?.degree ?? "",
+      institution: item?.institution ?? item?.university ?? "",
+      year: item?.year ?? item?.period ?? "",
+      gpa: item?.gpa ?? "",
+      description: item?.description ?? "",
+      achievements: Array.isArray(item?.achievements) ? item.achievements : [],
+    })
+  );
+
+  const certifications = Array.isArray(raw.certifications) ? raw.certifications : [];
+
+  return {
+    heading: raw.heading ?? "Education & Certifications",
+    description: raw.description ?? "",
+    education,
+    certifications,
+  };
+};
 
 const Education = () => {
-  const education = [
-    {
-      degree: "Master of Science in Computer Science",
-      institution: "Stanford University",
-      year: "2018 - 2020",
-      gpa: "3.9/4.0",
-      achievements: ["Dean's List", "Research Assistant", "Machine Learning Specialization"],
-      description: "Focused on advanced algorithms, machine learning, and web technologies. Completed thesis on 'Optimizing Web Performance using AI-driven Techniques'."
-    },
-    {
-      degree: "Bachelor of Science in Computer Engineering",
-      institution: "University of California, Berkeley",
-      year: "2014 - 2018",
-      gpa: "3.8/4.0",
-      achievements: ["Magna Cum Laude", "Programming Club President", "Hackathon Winner"],
-      description: "Comprehensive study of computer systems, programming, and software engineering principles. Active participant in coding competitions and open-source projects."
-    }
-  ];
+  const [educationData, setEducationData] = useState<EducationData | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const certifications = [
-    {
-      name: "AWS Certified Solutions Architect",
-      issuer: "Amazon Web Services",
-      year: "2023",
-      credentialId: "AWS-SA-2023-001"
-    },
-    {
-      name: "Google Cloud Professional Developer",
-      issuer: "Google Cloud",
-      year: "2022",
-      credentialId: "GCP-PD-2022-045"
-    },
-    {
-      name: "React Advanced Certification",
-      issuer: "React Training",
-      year: "2021",
-      credentialId: "RT-ADV-2021-078"
-    }
-  ];
+  useEffect(() => {
+    const fetchEducationData = async () => {
+      try {
+        const data = await getPortfolioSectionData<any>("education");
+        setEducationData(normalizeEducationData(data));
+      } catch (err) {
+        if (err instanceof FirebaseError && err.code === "permission-denied") {
+          setEducationData(null);
+        } else {
+          console.error("Error fetching education data:", err);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEducationData();
+  }, []);
+
+  const heading = educationData?.heading?.trim() || "Education & Certifications";
+  const description = educationData
+    ? educationData.description?.trim() ?? ""
+    : "Add your education and certifications in the admin dashboard; they load from Firestore.";
+  const education = educationData?.education ?? [];
+  const certifications = educationData?.certifications ?? [];
+
+  if (loading) {
+    return (
+      <section id="education" className="py-20 bg-background">
+        <div className="max-w-6xl mx-auto px-4 text-center text-muted-foreground">
+          Loading education…
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="education" className="py-20 bg-background">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
-            Education & Certifications
+            {heading}
           </h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            My academic journey and professional certifications that have shaped my expertise in web development and technology.
-          </p>
+          {description ? (
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              {description}
+            </p>
+          ) : null}
         </div>
 
         {/* Education */}
@@ -61,6 +101,11 @@ const Education = () => {
             Education
           </h3>
           <div className="space-y-8">
+            {education.length === 0 ? (
+              <p className="text-muted-foreground text-center py-8">
+                No education entries yet. Sign in to the dashboard and save the Education tab.
+              </p>
+            ) : null}
             {education.map((edu, index) => (
               <Card 
                 key={index} 
@@ -110,6 +155,11 @@ const Education = () => {
             Professional Certifications
           </h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {certifications.length === 0 ? (
+              <p className="text-muted-foreground text-center py-8 md:col-span-2 lg:col-span-3">
+                No certifications yet.
+              </p>
+            ) : null}
             {certifications.map((cert, index) => (
               <Card 
                 key={index} 

@@ -17,8 +17,13 @@ const Login = () => {
         e.preventDefault();
         setError('');
 
+        if (!adminEmail) {
+            setError("Admin email is not configured. Add VITE_ADMIN_EMAIL to .env and restart the dev server.");
+            return;
+        }
+
         // Restrict login to only the admin email
-        if (email !== adminEmail) {
+        if (email.trim().toLowerCase() !== adminEmail) {
             setError("Access denied. This is not the admin account.");
             return;
         }

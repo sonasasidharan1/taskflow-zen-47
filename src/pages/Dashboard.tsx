@@ -3,10 +3,18 @@ import { auth } from '../firebase/config';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
-import { getPortfolioData, PortfolioData } from '../services/portfolioService';
+import { getPortfolioData, PortfolioData, EducationData } from '../services/portfolioService';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import HeroForm from '@/components/dashboard/HeroForm';
 import AboutForm from '@/components/dashboard/AboutForm';
+import EducationForm from '@/components/dashboard/EducationForm';
+
+const emptyEducationData = (): EducationData => ({
+    heading: '',
+    description: '',
+    education: [],
+    certifications: [],
+});
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -60,12 +68,17 @@ const Dashboard = () => {
                     <TabsTrigger value="hero">Hero</TabsTrigger>
                     <TabsTrigger value="about">About</TabsTrigger>
                     <TabsTrigger value="experience" disabled>Experience</TabsTrigger>
-                    <TabsTrigger value="education" disabled>Education</TabsTrigger>
+                    <TabsTrigger value="education">Education</TabsTrigger>
                     <TabsTrigger value="portfolio" disabled>Portfolio</TabsTrigger>
                     <TabsTrigger value="contact" disabled>Contact</TabsTrigger>
                 </TabsList>
                 {portfolioData && <TabsContent value="hero"><HeroForm initialData={portfolioData.hero} /></TabsContent>}
                 {portfolioData && <TabsContent value="about"><AboutForm initialData={portfolioData.about} /></TabsContent>}
+                {portfolioData && (
+                    <TabsContent value="education">
+                        <EducationForm initialData={portfolioData.education ?? emptyEducationData()} />
+                    </TabsContent>
+                )}
             </Tabs>
         </div>
     );

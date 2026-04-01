@@ -6,17 +6,17 @@ const Footer = () => {
   const socialLinks = [
     {
       name: "GitHub",
-      href: "https://github.com",
+      href: "https://github.com/sonasasidharan",
       icon: <Github className="h-5 w-5" />
     },
     {
       name: "LinkedIn", 
-      href: "https://linkedin.com",
+      href: "https://www.linkedin.com/in/sona-k-web",
       icon: <Linkedin className="h-5 w-5" />
     },
     {
       name: "Email",
-      href: "mailto:sona@example.com",
+      href: "mailto:sonasasidharank2002@gmail.com",
       icon: <Mail className="h-5 w-5" />
     }
   ];
@@ -42,7 +42,7 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <nav className="space-y-2">
-              {["Home", "About", "Portfolio", "Blog", "Contact"].map((item) => (
+              {["Home", "About", "Portfolio", "Contact"].map((item) => (
                 <button
                   key={item}
                   onClick={() => scrollToSection(item.toLowerCase())}
@@ -63,10 +63,10 @@ const Footer = () => {
                   href="mailto:sona@example.com"
                   className="hover:text-accent transition-colors duration-200"
                 >
-                  sona@example.com
+                  sonasasidharank200@gmail.com
                 </a>
               </p>
-              <p className="text-primary-foreground/80">San Francisco, CA</p>
+              <p className="text-primary-foreground/80">kozhikode, Kerala, India</p>
             </div>
             
             <div className="flex space-x-4">

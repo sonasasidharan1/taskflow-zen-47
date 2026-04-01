@@ -1,64 +1,48 @@
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
+import { useEffect, useState } from "react";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { getPortfolioSectionData, ContactData } from "@/services/portfolioService";
+import { FirebaseError } from "firebase/app";
 
 const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: ""
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
+  const [contactData, setContactData] = useState<ContactData | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  useEffect(() => {
+    const fetchContactData = async () => {
+      try {
+        const data = await getPortfolioSectionData<ContactData>("contact");
+        setContactData(data);
+      } catch (err) {
+        // Public pages should still render with defaults if Firestore blocks unauthenticated reads.
+        if (err instanceof FirebaseError && err.code === "permission-denied") {
+          setContactData(null);
+        } else {
+          console.error("Error fetching contact data:", err);
+        }
+      }
+    };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    toast({
-      title: "Message sent successfully!",
-      description: "Thank you for reaching out. I'll get back to you soon.",
-    });
-
-    setFormData({ name: "", email: "", subject: "", message: "" });
-    setIsSubmitting(false);
-  };
+    fetchContactData();
+  }, []);
 
   const contactInfo = [
     {
       icon: <Mail className="h-5 w-5" />,
       label: "Email",
-      value: "sona@example.com",
-      href: "mailto:sona@example.com"
+      value: contactData?.email || "sona@example.com",
+      href: `mailto:${contactData?.email || "sona@example.com"}`,
     },
     {
       icon: <Phone className="h-5 w-5" />,
       label: "Phone",
-      value: "+1 (555) 123-4567",
-      href: "tel:+15551234567"
+      value: contactData?.phone || "+1 (555) 123-4567",
+      href: `tel:${(contactData?.phone || "+1 (555) 123-4567").replace(/\s+/g, "")}`,
     },
     {
       icon: <MapPin className="h-5 w-5" />,
       label: "Location",
-      value: "San Francisco, CA",
-      href: "#"
-    }
+      value: contactData?.location || "San Francisco, CA",
+      href: "#",
+    },
   ];
 
   return (
@@ -66,10 +50,11 @@ const Contact = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 animate-fade-in-up">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
-            Contact
+            {contactData?.heading || "Contact"}
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Let's discuss your next project or connect for opportunities.
+            {contactData?.description ||
+              "Let's discuss your next project or connect for opportunities."}
           </p>
         </div>
 

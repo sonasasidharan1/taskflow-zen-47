@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Code, Palette, Zap, Download, LucideProps } from "lucide-react";
 import { getPortfolioSectionData, AboutData } from '@/services/portfolioService';
 import { Skeleton } from '@/components/ui/skeleton';
+import { FirebaseError } from "firebase/app";
 
 // A helper to dynamically render icons from their string names
 const iconComponents: { [key: string]: React.FC<LucideProps> } = {
@@ -12,6 +13,30 @@ const iconComponents: { [key: string]: React.FC<LucideProps> } = {
   zap: Zap,
   // Add other lucide-react icons here as you need them
 };
+
+/** Shown in the Skills grid (alongside any skills from Firestore). */
+const staticSkills: Array<{ name: string; icon: string; description: string }> = [
+  {
+    name: "Core",
+    icon: "code",
+    description: "HTML, CSS, Javascript, Redux",
+  },
+  {
+    name: "Web technologies",
+    icon: "palette",
+    description: "ReactJS, NextJS, Tailwind CSS, Shadcn UI",
+  },
+  {
+    name: "Version control",
+    icon: "code",
+    description: "Github",
+  },
+  {
+    name: "Backend technologies",
+    icon: "zap",
+    description: "ExpressJS, Strapi, microfrontend",
+  },
+];
 
 const About = () => {
   const [aboutData, setAboutData] = useState<AboutData | null>(null);
@@ -24,8 +49,13 @@ const About = () => {
         const data = await getPortfolioSectionData<AboutData>('about');
         setAboutData(data);
       } catch (err) {
-        console.error('Error fetching about data:', err);
-        setError('Failed to load content.');
+        // Public pages should still render with defaults if Firestore blocks unauthenticated reads.
+        if (err instanceof FirebaseError && err.code === "permission-denied") {
+          setAboutData(null);
+        } else {
+          console.error('Error fetching about data:', err);
+          setError('Failed to load content.');
+        }
       } finally {
         setLoading(false);
       }
@@ -36,6 +66,8 @@ const About = () => {
 
   if (loading) return <AboutSkeleton />;
   if (error) return <section id="about" className="py-20 text-center text-destructive">{error}</section>;
+
+  const skills = [...staticSkills, ...(aboutData?.skills ?? [])];
 
   return (
     <section id="about" className="py-20 bg-background">
@@ -79,12 +111,13 @@ const About = () => {
             <h3 className="text-2xl font-serif font-semibold text-primary mb-6">
               {aboutData?.journey.heading || 'My Journey'}
             </h3>
-            <p className="text-foreground leading-relaxed mb-4">
-              {aboutData?.journey.description || 'My journey in web development started with a curiosity about how websites work. What began as a hobby quickly turned into a passion.'}
+            <p className="text-foreground leading-relaxed">
+              {aboutData?.journey.description ||
+                "What started as a simple interest in technology has evolved into a journey of constant learning, building, and innovation. I strive to create solutions that are not only functional but also meaningful."}
             </p>
           </div>
 
-          <div className="animate-scale-in" style={{ animationDelay: '0.4s' }}>
+          <div className="animate-scale-in space-y-6" style={{ animationDelay: '0.4s' }}>
             <div className="bg-gradient-primary rounded-lg p-8 text-center shadow-medium hover:shadow-lg transform transition-all duration-300 hover-scale">
               <div className="space-y-6">
                 <div className="transform transition-transform duration-300 hover:scale-110">
@@ -100,12 +133,15 @@ const About = () => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {(aboutData?.skills || []).map((skill, index) => {
+        <div className="mb-8 text-center md:text-left">
+          <h3 className="text-2xl font-serif font-semibold text-primary">Skills</h3>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {skills.map((skill, index) => {
             const IconComponent = iconComponents[skill.icon.toLowerCase()] || Code;
             return (
               <Card
-                key={index}
+                key={`${skill.name}-${index}`}
                 className="shadow-soft hover:shadow-medium transition-all duration-500 animate-fade-in hover-scale group cursor-pointer"
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
