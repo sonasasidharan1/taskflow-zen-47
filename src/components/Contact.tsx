@@ -29,7 +29,14 @@ const Contact = () => {
   useEffect(() => {
     const generateQr = async () => {
       try {
-        const baseUrl = `${window.location.origin}${window.location.pathname}`;
+        // When running locally, window.location.origin will be `http://localhost:...`.
+        // Scanning from another device will fail. Use VITE_SITE_URL in .env for a real domain.
+        const configuredBase = import.meta.env.VITE_SITE_URL as
+          | string
+          | undefined;
+        const baseUrl = (configuredBase ?? window.location.origin).replace(/\/$/, "");
+
+        // We only need to jump to the Contact section, which is an in-page anchor.
         const contactAnchorUrl = `${baseUrl}#contact`;
         const dataUrl = await QRCode.toDataURL(contactAnchorUrl, {
           margin: 1,
