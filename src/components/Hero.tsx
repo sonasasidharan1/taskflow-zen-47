@@ -31,7 +31,7 @@ const Hero = () => {
   const [error, setError] = useState<string | null>(null);
   const [resumeOpen, setResumeOpen] = useState(false);
 
-  const resumeFileName = "SONA K (3).pdf";
+  const resumeFileName = "SONA_K.pdf";
   const resumeHref = `/${encodeURIComponent(resumeFileName)}`;
 
   useEffect(() => {
