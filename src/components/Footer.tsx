@@ -90,9 +90,6 @@ const Footer = () => {
           <p className="text-primary-foreground/60 text-sm mb-4 md:mb-0">
             © {currentYear} Sona K. All rights reserved.
           </p>
-          <p className="text-primary-foreground/60 text-sm flex items-center">
-            Made with <Heart className="h-4 w-4 mx-1 text-accent" /> 
-          </p>
         </div>
       </div>
     </footer>

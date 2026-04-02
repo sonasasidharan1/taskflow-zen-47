@@ -2,8 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { getPortfolioSectionData, HeroData } from '@/services/portfolioService';
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { ArrowDown, Github, Linkedin, Mail } from "lucide-react";
+import { ArrowDown, Download, Github, Linkedin, Mail } from "lucide-react";
 import { FirebaseError } from "firebase/app";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const WhatsAppIcon = ({ className = "h-6 w-6" }: { className?: string }) => (
   <svg
@@ -23,6 +29,10 @@ const Hero = () => {
   const [heroData, setHeroData] = useState<HeroData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [resumeOpen, setResumeOpen] = useState(false);
+
+  const resumeFileName = "SONA K (3).pdf";
+  const resumeHref = `/${encodeURIComponent(resumeFileName)}`;
 
   useEffect(() => {
     const fetchHeroData = async () => {
@@ -79,23 +89,18 @@ const Hero = () => {
             </div>
           </div>
           <h1 className="text-5xl md:text-7xl font-serif font-bold text-primary mb-4 hover-scale">
-            {heroData?.name || 'Your Name'}
+            {heroData?.name || 'Sona K'}
           </h1>
           <h2 className="text-xl md:text-2xl text-muted-foreground mb-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            {heroData?.title || 'Your Title'}
+            {heroData?.title || 'Software Engineer'}
           </h2>
           <p className="text-lg text-foreground max-w-2xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: '0.6s' }}>
-            {heroData?.subtitle || 'A catchy and descriptive subtitle about what you do.'}
+            {heroData?.subtitle ||
+              'What started as a simple interest in technology has evolved into a journey of constant learning, building, and innovation. I strive to create solutions that are not only functional but also meaningful.'}
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-12 animate-scale-in" style={{ animationDelay: '0.8s' }}>
-          <Button
-            onClick={() => scrollToSection("portfolio")}
-            className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium px-8 py-3 rounded-full shadow-medium hover-scale transform transition-all duration-300 hover:shadow-lg"
-          >
-            View My Work
-          </Button>
+        <div className="flex flex-col sm:flex-row sm:flex-wrap items-center justify-center gap-4 sm:gap-6 mb-12 animate-scale-in" style={{ animationDelay: '0.8s' }}>
           <Button
             variant="outline"
             onClick={() => scrollToSection("contact")}
@@ -103,7 +108,40 @@ const Hero = () => {
           >
             Get In Touch
           </Button>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setResumeOpen(true);
+
+              // Trigger download as well (works for files in /public).
+              const link = document.createElement("a");
+              link.href = resumeHref;
+              link.download = resumeFileName;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }}
+            className="border-accent text-accent hover:bg-accent hover:text-accent-foreground px-8 py-3 rounded-full hover-scale transform transition-all duration-300"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Download Resume
+          </Button>
         </div>
+
+        <Dialog open={resumeOpen} onOpenChange={setResumeOpen}>
+          <DialogContent className="max-w-3xl">
+            <DialogHeader>
+              <DialogTitle>Resume Preview</DialogTitle>
+            </DialogHeader>
+            <div className="w-full">
+              <iframe
+                src={resumeHref}
+                title="Resume PDF Preview"
+                className="w-full h-[70vh] rounded-md border border-border/60"
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
 
         <div className="flex justify-center space-x-6 animate-fade-in" style={{ animationDelay: '1s' }}>
           <a

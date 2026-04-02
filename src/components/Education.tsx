@@ -177,9 +177,9 @@ const Education = () => {
                   </h4>
                   <p className="text-accent font-medium mb-1">{cert.issuer}</p>
                   <p className="text-sm text-muted-foreground mb-2">{cert.year}</p>
-                  <p className="text-xs text-muted-foreground">
+                  {/* <p className="text-xs text-muted-foreground">
                     ID: {cert.credentialId}
-                  </p>
+                  </p> */}
                 </CardContent>
               </Card>
             ))}

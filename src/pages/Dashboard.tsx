@@ -69,7 +69,7 @@ const Dashboard = () => {
                     <TabsTrigger value="about">About</TabsTrigger>
                     <TabsTrigger value="experience" disabled>Experience</TabsTrigger>
                     <TabsTrigger value="education">Education</TabsTrigger>
-                    <TabsTrigger value="portfolio" disabled>Portfolio</TabsTrigger>
+                    {/* <TabsTrigger value="portfolio" disabled>Portfolio</TabsTrigger> */}
                     <TabsTrigger value="contact" disabled>Contact</TabsTrigger>
                 </TabsList>
                 {portfolioData && <TabsContent value="hero"><HeroForm initialData={portfolioData.hero} /></TabsContent>}

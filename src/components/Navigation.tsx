@@ -1,10 +1,17 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+  const [isDark, setIsDark] = useState(false);
+
+  const sectionIds = useMemo(
+    () => ["home", "about", "experience", "education","contact"],
+    []
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,6 +20,52 @@ const Navigation = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    const initialTheme = saved ?? (prefersDark ? "dark" : "light");
+    setIsDark(initialTheme === "dark");
+    document.documentElement.classList.toggle("dark", initialTheme === "dark");
+  }, []);
+
+  const toggleTheme = () => {
+    setIsDark((prev) => {
+      const next = !prev;
+      document.documentElement.classList.toggle("dark", next);
+      localStorage.setItem("theme", next ? "dark" : "light");
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean) as HTMLElement[];
+
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0));
+
+        if (visible[0]?.target?.id) setActiveSection(visible[0].target.id);
+      },
+      {
+        root: null,
+        rootMargin: "-20% 0px -70% 0px",
+        threshold: [0, 0.1, 0.2, 0.3],
+      }
+    );
+
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
+  }, [sectionIds]);
 
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
@@ -31,35 +84,63 @@ const Navigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-8">
-            {["Home", "About", "Experience", "Education", "Portfolio", "Contact"].map((item, index) => (
-              <button
-                key={item}
-                onClick={() => scrollToSection(item.toLowerCase())}
-                className="text-foreground hover:text-accent transition-all duration-300 font-medium relative group story-link animate-fade-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                {item}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full"></span>
-              </button>
-            ))}
+            {["Home", "About", "Experience", "Education", "Contact"].map(
+              (item, index) => {
+                const sectionId = item.toLowerCase();
+                const isActive = activeSection === sectionId;
+                return (
+                  <button
+                    key={item}
+                    onClick={() => scrollToSection(sectionId)}
+                    className={`transition-all duration-300 font-medium relative group story-link animate-fade-in ${
+                      isActive
+                        ? "text-accent"
+                        : "text-foreground hover:text-accent"
+                    }`}
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    {item}
+                    <span
+                      className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full ${
+                        isActive ? "w-full" : ""
+                      }`}
+                    />
+                  </button>
+                );
+              }
+            )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              className="hidden sm:inline-flex"
+            >
+              {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </Button>
+
+            {/* Mobile Menu Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Toggle navigation menu"
+            >
+              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden bg-card border-t border-border animate-fade-in">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              {["Home", "About", "Experience", "Education", "Portfolio", "Contact"].map((item) => (
+              {["Home", "About", "Experience", "Education", "Contact"].map((item) => (
                 <button
                   key={item}
                   onClick={() => scrollToSection(item.toLowerCase())}

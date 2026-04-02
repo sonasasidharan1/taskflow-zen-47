@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Code, Palette, Zap, Download, LucideProps } from "lucide-react";
+import { Code, Palette, Zap, Download, LucideProps, FileText } from "lucide-react";
 import { getPortfolioSectionData, AboutData } from '@/services/portfolioService';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FirebaseError } from "firebase/app";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 // A helper to dynamically render icons from their string names
 const iconComponents: { [key: string]: React.FC<LucideProps> } = {
@@ -24,7 +30,7 @@ const staticSkills: Array<{ name: string; icon: string; description: string }> =
   {
     name: "Web technologies",
     icon: "palette",
-    description: "ReactJS, NextJS, Tailwind CSS, Shadcn UI",
+    description: "ReactJS, NextJS, Tailwind CSS, Shadcn UI, microfrontend",
   },
   {
     name: "Version control",
@@ -34,7 +40,7 @@ const staticSkills: Array<{ name: string; icon: string; description: string }> =
   {
     name: "Backend technologies",
     icon: "zap",
-    description: "ExpressJS, Strapi, microfrontend",
+    description: "ExpressJS, Strapi",
   },
 ];
 
@@ -42,6 +48,9 @@ const About = () => {
   const [aboutData, setAboutData] = useState<AboutData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [resumeOpen, setResumeOpen] = useState(false);
+  const resumeFileName = "SONA K (3).pdf";
+  const resumeHref = `/${encodeURIComponent(resumeFileName)}`;
 
   useEffect(() => {
     const fetchAboutData = async () => {
@@ -67,7 +76,16 @@ const About = () => {
   if (loading) return <AboutSkeleton />;
   if (error) return <section id="about" className="py-20 text-center text-destructive">{error}</section>;
 
-  const skills = [...staticSkills, ...(aboutData?.skills ?? [])];
+  const skills = [...staticSkills, ...(aboutData?.skills ?? [])].filter((skill) => {
+    const name = (skill?.name ?? "").toString().toLowerCase().trim();
+    const description = (skill?.description ?? "").toString().toLowerCase().trim();
+
+    // Removes the unwanted card shown as "react" with description "skills".
+    const isBadReactSkillsCard =
+      name.includes("react") && description.includes("skills");
+
+    return !isBadReactSkillsCard;
+  });
 
   return (
     <section id="about" className="py-20 bg-background">
@@ -81,30 +99,68 @@ const About = () => {
           </p>
         </div>
 
-        {/* Download CV Section */}
-        <div className="text-center mb-16 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-          <div className="bg-gradient-primary rounded-lg p-8 shadow-medium hover:shadow-lg transition-all duration-300">
-            <h3 className="text-2xl font-serif font-semibold text-accent-foreground mb-4">
-              {aboutData?.resume.heading || 'Interested in Working Together?'}
-            </h3>
-            <p className="text-accent-foreground/80 mb-6 max-w-2xl mx-auto">
-              {aboutData?.resume.description || 'Download my resume to learn more about my experience, skills, and achievements.'}
-            </p>
-            <Button
-              className="bg-background/20 hover:bg-background/30 text-accent-foreground border border-accent-foreground/20 hover:border-accent-foreground/40 font-medium px-8 py-3 rounded-full shadow-medium hover-scale transform transition-all duration-300"
-              onClick={() => {
-                // This part is still a placeholder for file download functionality
-                const link = document.createElement('a');
-                link.href = '/placeholder.svg'; // Replace with actual CV file path
-                link.download = 'Sona_K_Resume.pdf';
-                link.click();
-              }}
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Download Resume
-            </Button>
+        {/* Resume Download Section */}
+        <div className="mb-16 animate-fade-in" style={{ animationDelay: "0.1s" }}>
+          <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-gradient-primary/10 shadow-soft">
+            <div className="absolute -top-24 -right-20 h-72 w-72 rounded-full bg-accent/25 blur-3xl" />
+            <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-primary/15 blur-3xl" />
+
+            <div className="relative p-8 md:p-10">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div className="max-w-2xl">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/40 px-3 py-1 text-accent">
+                    <FileText className="h-4 w-4" />
+                    <span className="text-sm font-medium">Resume</span>
+                  </div>
+
+                  <h3 className="mt-4 text-3xl md:text-4xl font-serif font-semibold text-primary">
+                    {aboutData?.resume.heading || "Interested in Working Together?"}
+                  </h3>
+
+                  <p className="mt-3 text-muted-foreground leading-relaxed">
+                    {aboutData?.resume.description ||
+                      "Download my resume to learn more about my experience, skills, and achievements."}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-center md:justify-end">
+                  <Button
+                    className="bg-accent hover:bg-accent/90 text-accent-foreground font-medium px-7 py-3 rounded-full shadow-medium transform transition-all duration-300 hover:-translate-y-0.5 hover:shadow-medium"
+                    onClick={() => {
+                      setResumeOpen(true);
+
+                      // Trigger download as well (works for files in /public).
+                      const link = document.createElement("a");
+                      link.href = resumeHref;
+                      link.download = resumeFileName;
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    View & Download Resume
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
+        <Dialog open={resumeOpen} onOpenChange={setResumeOpen}>
+          <DialogContent className="max-w-3xl">
+            <DialogHeader>
+              <DialogTitle>Resume Preview</DialogTitle>
+            </DialogHeader>
+            <div className="w-full">
+              <iframe
+                src={resumeHref}
+                title="Resume PDF Preview"
+                className="w-full h-[70vh] rounded-md border border-border/60"
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
 
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
           <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>

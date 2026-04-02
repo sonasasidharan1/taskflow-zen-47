@@ -48,7 +48,7 @@ const Portfolio = () => {
   ];
 
   return (
-    <section id="portfolio" className="py-20 bg-secondary">
+    <section id="portfolio" className="py-16 bg-secondary">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 animate-fade-in-up">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
@@ -60,25 +60,27 @@ const Portfolio = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project, index) => (
             <Card 
               key={index} 
-              className="group shadow-soft hover:shadow-lg transition-all duration-500 animate-fade-in overflow-hidden hover-scale transform hover:-translate-y-2 cursor-pointer"
+              className="group shadow-soft hover:shadow-lg transition-all duration-500 animate-fade-in overflow-hidden hover-scale transform hover:-translate-y-1 cursor-pointer will-change-transform"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="relative overflow-hidden">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="w-full h-36 object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center space-x-4">
+                <div
+                  className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center space-x-2 pointer-events-none group-hover:pointer-events-auto backdrop-blur-sm"
+                >
                   <Button
                     size="sm"
                     variant="secondary"
                     asChild
-                    className="shadow-medium transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover-scale"
+                    className="shadow-medium transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300"
                     style={{ transitionDelay: '0.1s' }}
                   >
                     <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
@@ -103,21 +105,21 @@ const Portfolio = () => {
                 </div>
               </div>
               
-              <CardHeader className="group-hover:bg-accent/5 transition-colors duration-300">
-                <CardTitle className="text-xl font-semibold text-primary group-hover:text-accent transition-colors duration-300">
+              <CardHeader className="p-4 pb-0 group-hover:bg-accent/5 transition-colors duration-300">
+                <CardTitle className="text-lg font-semibold text-primary group-hover:text-accent transition-colors duration-300 line-clamp-1">
                   {project.title}
                 </CardTitle>
               </CardHeader>
               
-              <CardContent className="pt-0 group-hover:bg-accent/5 transition-colors duration-300">
-                <p className="text-muted-foreground mb-4 leading-relaxed group-hover:text-foreground transition-colors duration-300">
+              <CardContent className="p-4 pt-2 group-hover:bg-accent/5 transition-colors duration-300">
+                <p className="text-muted-foreground mb-3 text-sm leading-relaxed group-hover:text-foreground transition-colors duration-300 line-clamp-3">
                   {project.description}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {project.tags.map((tag, tagIndex) => (
                     <span
                       key={tagIndex}
-                      className="px-3 py-1 text-xs font-medium bg-accent/10 text-accent rounded-full transition-all duration-300 hover:bg-accent/20 hover:scale-105 cursor-pointer"
+                      className="px-2.5 py-0.5 text-xs font-medium bg-accent/10 text-accent rounded-full transition-all duration-300 hover:bg-accent/20 cursor-pointer"
                     >
                       {tag}
                     </span>
