@@ -36,9 +36,9 @@ const Contact = () => {
           | undefined;
         const baseUrl = (configuredBase ?? window.location.origin).replace(/\/$/, "");
 
-        // We only need to jump to the Contact section, which is an in-page anchor.
-        const contactAnchorUrl = `${baseUrl}#contact`;
-        const dataUrl = await QRCode.toDataURL(contactAnchorUrl, {
+        // Open a dedicated page with GitHub/LinkedIn/Mail options after scanning.
+        const contactLinksUrl = `${baseUrl}/contact-links.html`;
+        const dataUrl = await QRCode.toDataURL(contactLinksUrl, {
           margin: 1,
           width: 180,
           errorCorrectionLevel: "M",
@@ -132,7 +132,7 @@ const Contact = () => {
                   Scan to open Contact
                 </h3>
                 <p className="text-muted-foreground mb-4">
-                  QR will open this page at the Contact section (GitHub, LinkedIn, and Mail).
+                  QR will open a quick links page with GitHub, LinkedIn, and Mail.
                 </p>
 
                 <div className="flex items-center gap-6">
