@@ -91,7 +91,7 @@ const Footer = () => {
             © {currentYear} Sona K. All rights reserved.
           </p>
           <p className="text-primary-foreground/60 text-sm flex items-center">
-            Made with <Heart className="h-4 w-4 mx-1 text-accent" /> and lots of coffee
+            Made with <Heart className="h-4 w-4 mx-1 text-accent" /> 
           </p>
         </div>
       </div>

@@ -2,56 +2,49 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Github } from "lucide-react";
 
+type Project = {
+  title: string;
+  description: string;
+  image: string;
+  tags: string[];
+  liveUrl: string;
+  githubUrl?: string;
+};
+
 const Portfolio = () => {
-  const projects = [
+  const projects: Project[] = [
     {
-      title: "E-Commerce Platform",
-      description: "A modern e-commerce solution built with React and Node.js, featuring real-time inventory management and seamless payment integration.",
-      image: "/placeholder.svg",
-      tags: ["React", "Node.js", "MongoDB", "Stripe"],
-      liveUrl: "#",
-      githubUrl: "#"
+      title: "Recipe App",
+      description:
+        "Browse, search, and explore recipes with a clean frontend experience—deployed on Vercel.",
+      image: "/portfolio-recipe.jpg",
+      tags: ["React", "Vercel", "Frontend"],
+      liveUrl: "https://recipe-frontend-gray.vercel.app/",
     },
     {
-      title: "Task Management App",
-      description: "A collaborative task management application with real-time updates, drag-and-drop functionality, and team collaboration features.",
-      image: "/placeholder.svg",
-      tags: ["Vue.js", "Firebase", "Tailwind CSS", "PWA"],
-      liveUrl: "#",
-      githubUrl: "#"
+      title: "Task Management",
+      description:
+        "Organize tasks and workflows in a focused task-management UI, hosted as a live demo.",
+      image: "/portfolio-task-management.jpg",
+      tags: ["React", "Vercel", "Productivity"],
+      liveUrl: "https://task-frontend-blush-ten.vercel.app/",
     },
     {
-      title: "Portfolio Website",
-      description: "A responsive portfolio website for a creative agency, featuring smooth animations and an intuitive content management system.",
-      image: "/placeholder.svg",
-      tags: ["Next.js", "Sanity", "Framer Motion", "TypeScript"],
-      liveUrl: "#",
-      githubUrl: "#"
+      title: "Media Player",
+      description:
+        "A web-based media player interface for playback and controls in the browser.",
+      image: "/portfolio-media-player.jpg",
+      tags: ["JavaScript", "Vercel", "UI"],
+      liveUrl: "https://media-player-puce.vercel.app/",
     },
     {
-      title: "Weather Dashboard",
-      description: "An interactive weather dashboard with location-based forecasts, data visualization, and weather alerts functionality.",
-      image: "/placeholder.svg",
-      tags: ["React", "D3.js", "Weather API", "Chart.js"],
-      liveUrl: "#",
-      githubUrl: "#"
+      title: "Project Fair",
+      description:
+        "A project showcase / fair-style frontend for presenting work and demos.",
+      image: "/portfolio-project-fair.jpg",
+      tags: ["React", "Vercel", "Portfolio"],
+      liveUrl: "https://project-fair-chi-eight.vercel.app/",
     },
-    {
-      title: "Social Media App",
-      description: "A full-stack social media application with real-time messaging, image sharing, and advanced privacy controls.",
-      image: "/placeholder.svg",
-      tags: ["React Native", "GraphQL", "PostgreSQL", "AWS"],
-      liveUrl: "#",
-      githubUrl: "#"
-    },
-    {
-      title: "Learning Platform",
-      description: "An online learning platform with video streaming, progress tracking, and interactive quizzes for educational content.",
-      image: "/placeholder.svg",
-      tags: ["Angular", "Node.js", "Socket.io", "MySQL"],
-      liveUrl: "#",
-      githubUrl: "#"
-    }
   ];
 
   return (
@@ -93,18 +86,20 @@ const Portfolio = () => {
                       Live Demo
                     </a>
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    asChild
-                    className="bg-background/90 hover:bg-background transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover-scale"
-                    style={{ transitionDelay: '0.2s' }}
-                  >
-                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                      <Github className="h-4 w-4 mr-2" />
-                      Code
-                    </a>
-                  </Button>
+                  {project.githubUrl ? (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      asChild
+                      className="bg-background/90 hover:bg-background transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover-scale"
+                      style={{ transitionDelay: "0.2s" }}
+                    >
+                      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                        <Github className="h-4 w-4 mr-2" />
+                        Code
+                      </a>
+                    </Button>
+                  ) : null}
                 </div>
               </div>
               

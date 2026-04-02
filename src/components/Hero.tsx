@@ -132,7 +132,7 @@ const Hero = () => {
             <Mail className="h-6 w-6" />
           </a>
           <a
-            href="https://wa.me/15551234567"
+            href="https://wa.me/9961146641"
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-accent transition-all duration-300 hover-scale transform hover:rotate-12"
