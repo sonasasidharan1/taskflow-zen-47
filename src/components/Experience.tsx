@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Briefcase } from "lucide-react";
 
@@ -67,6 +68,16 @@ const experiences: ExperienceItem[] = [
 ];
 
 const Experience = () => {
+  const [expandedProjects, setExpandedProjects] = useState<Record<string, boolean>>({});
+
+  const getProjectKey = (experienceIndex: number, projectIndex: number) =>
+    `${experienceIndex}-${projectIndex}`;
+
+  const truncateText = (text: string, maxChars = 260) => {
+    if (text.length <= maxChars) return text;
+    return `${text.slice(0, maxChars).trim()}...`;
+  };
+
   return (
     <section id="experience" className="py-20 bg-secondary">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -113,18 +124,42 @@ const Experience = () => {
                 {exp.projects.length > 0 ? (
                   <div className="space-y-4">
                     <p className="font-medium text-primary">Projects:</p>
-                    {exp.projects.map((project, projectIndex) => (
-                      <div
-                        key={projectIndex}
-                        className="rounded-lg border border-border p-4 bg-card"
-                      >
-                        <p className="font-semibold text-primary">
-                          {project.name}{" "}
-                          <span className="text-muted-foreground font-normal">| {project.type}</span>
-                        </p>
-                        <p className="text-foreground mt-2 leading-relaxed">{project.description}</p>
-                      </div>
-                    ))}
+                    {exp.projects.map((project, projectIndex) => {
+                      const key = getProjectKey(index, projectIndex);
+                      const isExpanded = !!expandedProjects[key];
+                      const hasLongText = project.description.length > 260;
+
+                      return (
+                        <div
+                          key={projectIndex}
+                          className="rounded-lg border border-border p-4 bg-card"
+                        >
+                          <p className="font-semibold text-primary">
+                            {project.name}{" "}
+                            <span className="text-muted-foreground font-normal">| {project.type}</span>
+                          </p>
+                          <p className="text-foreground mt-2 leading-relaxed">
+                            {isExpanded
+                              ? project.description
+                              : truncateText(project.description)}
+                          </p>
+                          {hasLongText ? (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setExpandedProjects((prev) => ({
+                                  ...prev,
+                                  [key]: !isExpanded,
+                                }))
+                              }
+                              className="mt-2 text-sm font-medium text-accent hover:text-accent/80 transition-colors"
+                            >
+                              {isExpanded ? "See less" : "See more"}
+                            </button>
+                          ) : null}
+                        </div>
+                      );
+                    })}
                   </div>
                 ) : null}
               </CardContent>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Code, Palette, Zap, Download, LucideProps, FileText } from "lucide-react";
+import { Code, Palette, Zap, Download, LucideProps, FileText, GitBranch } from "lucide-react";
 import { getPortfolioSectionData, AboutData } from '@/services/portfolioService';
 import { Skeleton } from '@/components/ui/skeleton';
 import { FirebaseError } from "firebase/app";
@@ -17,6 +17,7 @@ const iconComponents: { [key: string]: React.FC<LucideProps> } = {
   code: Code,
   palette: Palette,
   zap: Zap,
+  git: GitBranch,
   // Add other lucide-react icons here as you need them
 };
 
@@ -34,7 +35,7 @@ const staticSkills: Array<{ name: string; icon: string; description: string }> =
   },
   {
     name: "Version control",
-    icon: "code",
+    icon: "git",
     description: "Github",
   },
   {
@@ -100,7 +101,7 @@ const About = () => {
         </div>
 
         {/* Resume Download Section */}
-        <div className="mb-16 animate-fade-in" style={{ animationDelay: "0.1s" }}>
+        {/* <div className="mb-16 animate-fade-in" style={{ animationDelay: "0.1s" }}>
           <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-gradient-primary/10 shadow-soft">
             <div className="absolute -top-24 -right-20 h-72 w-72 rounded-full bg-accent/25 blur-3xl" />
             <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-primary/15 blur-3xl" />
@@ -160,7 +161,7 @@ const About = () => {
               />
             </div>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
 
         <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
           <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
